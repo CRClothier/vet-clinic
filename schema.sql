@@ -81,3 +81,12 @@ CREATE INDEX IF NOT EXISTS vet_id_index
 
 ALTER TABLE IF EXISTS public.visits
     CLUSTER ON vet_id_index;
+
+/* Third Query: SELECT * FROM owners where email = 'owner_18327@mail.com' */
+CREATE INDEX IF NOT EXISTS owner_index
+    ON public.owners USING btree
+    (email COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.owners
+    CLUSTER ON owner_index;
