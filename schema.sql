@@ -64,11 +64,20 @@ INSERT INTO visits (animal_id, vet_id, date_of_visit) SELECT * FROM (SELECT id F
 insert into owners (full_name, email) select 'Owner ' || generate_series(1,2500000), 'owner_' || generate_series(1,2500000) || '@mail.com';
 
 /*First Query: SELECT COUNT(*) FROM visits where animal_id = 4 */
- CREATE INDEX IF NOT EXISTS animal_id
-     ON public.visits USING btree
-     (animal_id ASC NULLS LAST)
-     TABLESPACE pg_default;
+CREATE INDEX IF NOT EXISTS animal_id
+    ON public.visits USING btree
+    (animal_id ASC NULLS LAST)
+    TABLESPACE pg_default;
 
- ALTER TABLE IF EXISTS public.visits
-     CLUSTER ON animal_id;
-     
+ALTER TABLE IF EXISTS public.visits
+    CLUSTER ON animal_id;
+
+/*Second Query: SELECT * FROM visits where vet_id = 2 */
+CREATE INDEX IF NOT EXISTS vet_id_index
+    ON public.visits USING btree
+    (vet_id ASC NULLS LAST)
+    INCLUDE(animal_id, visit_date)
+    TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.visits
+    CLUSTER ON vet_id_index;
